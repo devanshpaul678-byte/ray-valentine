@@ -15,16 +15,22 @@ body {
     color: #5a2a42;
 }
 
+/* Screens */
 .screen {
-    display: none;
-    height: 100vh;
-    width: 100%;
+    position: absolute;
+    inset: 0;
     padding: 20px;
-    box-sizing: border-box;
+    display: none;
+    animation: fadeUp 1s ease forwards;
 }
 
 .active {
     display: block;
+}
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 h1 {
@@ -70,6 +76,19 @@ button {
     box-shadow: 0 6px 12px rgba(0,0,0,0.15);
 }
 
+/* Floating animals */
+.animal {
+    position: absolute;
+    font-size: 38px;
+    animation: floatAround 8s linear infinite;
+}
+
+@keyframes floatAround {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-40px); }
+    100% { transform: translateY(0); }
+}
+
 /* Plants */
 .plant {
     position: fixed;
@@ -79,14 +98,33 @@ button {
 .left { left: 5px; }
 .right { right: 5px; }
 
-/* Flowers & sparkles */
+/* Floating flowers */
 .float {
     position: absolute;
     animation: floatUp 6s linear infinite;
 }
+
 @keyframes floatUp {
     from { transform: translateY(100vh); opacity: 1; }
     to { transform: translateY(-10vh); opacity: 0; }
+}
+
+/* Love burst */
+.heart {
+    position: absolute;
+    font-size: 22px;
+    animation: burst 1.2s ease-out forwards;
+}
+
+@keyframes burst {
+    from { transform: scale(1) translate(0,0); opacity: 1; }
+    to {
+        transform: scale(1.8) translate(
+            calc(-100px + 200px * random()),
+            calc(-150px + 300px * random())
+        );
+        opacity: 0;
+    }
 }
 </style>
 </head>
@@ -98,6 +136,9 @@ button {
     <h1>HELLO MY SOHNA LADLA PUTT 💖💖</h1>
     <p>I wanted to say something…<br>ask you something…</p>
     <button id="continue">CONTINUE 💗</button>
+
+    <div class="animal" style="left:10%; top:30%;">🐻</div>
+    <div class="animal" style="right:10%; top:40%;">🐼</div>
 </div>
 
 <!-- 💕 SCREEN 2 -->
@@ -108,6 +149,9 @@ button {
     <h1>Will you be my VALENTINE? 💘</h1>
     <button id="yes">YES 💖</button>
     <button id="no">NO 🙈</button>
+
+    <div class="animal" style="left:15%; top:35%;">🐼</div>
+    <div class="animal" style="right:15%; top:45%;">🐻</div>
 </div>
 
 <!-- 🐻💗 SCREEN 3 -->
@@ -129,17 +173,17 @@ button {
 </audio>
 
 <script>
-// Screen switching
 const s1 = document.getElementById("screen1");
 const s2 = document.getElementById("screen2");
 const s3 = document.getElementById("screen3");
 
+// Continue
 document.getElementById("continue").onclick = () => {
     s1.classList.remove("active");
     s2.classList.add("active");
 };
 
-// NO button escape
+// NO escape
 const noBtn = document.getElementById("no");
 noBtn.addEventListener("mouseenter", moveNo);
 noBtn.addEventListener("touchstart", moveNo);
@@ -150,18 +194,36 @@ function moveNo() {
 }
 
 // YES logic
-document.getElementById("yes").onclick = () => {
-    s2.classList.remove("active");
-    s3.classList.add("active");
+document.getElementById("yes").onclick = (e) => {
+    loveBurst(e.target);
 
-    const song = document.getElementById("song");
-    song.currentTime = 25;
-    song.play();
+    setTimeout(() => {
+        s2.classList.remove("active");
+        s3.classList.add("active");
 
-    typeFinalText();
+        const song = document.getElementById("song");
+        song.currentTime = 25;
+        song.play();
+
+        typeFinalText();
+    }, 900);
 };
 
-// Typing paragraphs (final screen)
+// Love burst
+function loveBurst(btn) {
+    const rect = btn.getBoundingClientRect();
+    for (let i = 0; i < 30; i++) {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.innerHTML = ["💖","💗","💘","💕"][Math.floor(Math.random()*4)];
+        heart.style.left = rect.left + rect.width/2 + "px";
+        heart.style.top = rect.top + "px";
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 1200);
+    }
+}
+
+// Final typing
 const finalParagraphs = [
 "RAYYY, you walked into my life quietly, but somehow changed everything beautifully.",
 "With you, even ordinary moments feel special and calm feels like home.",
@@ -185,7 +247,7 @@ function typeFinalText() {
     }
 }
 
-// Floating sparkles & flowers
+// Floating flowers
 setInterval(() => {
     const el = document.createElement("div");
     el.className = "float";
