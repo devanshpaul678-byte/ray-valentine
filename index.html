@@ -96,5 +96,106 @@ button {
 <!-- 🌸 SCREEN 1 -->
 <div id="screen1" class="screen active">
     <h1>HELLO MY SOHNA LADLA PUTT 💖💖</h1>
-    <p>I
+    <p>I wanted to say something…<br>ask you something…</p>
+    <button id="continue">CONTINUE 💗</button>
+</div>
 
+<!-- 💕 SCREEN 2 -->
+<div id="screen2" class="screen">
+    <p>
+        You make my days softer, my smiles real, and my heart calmer than it has ever been.
+    </p>
+    <h1>Will you be my VALENTINE? 💘</h1>
+    <button id="yes">YES 💖</button>
+    <button id="no">NO 🙈</button>
+</div>
+
+<!-- 🐻💗 SCREEN 3 -->
+<div id="screen3" class="screen">
+    <div class="gallery">
+        <img src="img1.jpg">
+        <img src="img2.jpg">
+        <img src="img3.jpg">
+    </div>
+    <div id="finalText"></div>
+</div>
+
+<!-- 🌿 Plants -->
+<div class="plant left">🌿🌱</div>
+<div class="plant right">🌱🌿</div>
+
+<audio id="song">
+    <source src="song.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+// Screen switching
+const s1 = document.getElementById("screen1");
+const s2 = document.getElementById("screen2");
+const s3 = document.getElementById("screen3");
+
+document.getElementById("continue").onclick = () => {
+    s1.classList.remove("active");
+    s2.classList.add("active");
+};
+
+// NO button escape
+const noBtn = document.getElementById("no");
+noBtn.addEventListener("mouseenter", moveNo);
+noBtn.addEventListener("touchstart", moveNo);
+
+function moveNo() {
+    noBtn.style.left = Math.random() * (window.innerWidth - 80) + "px";
+    noBtn.style.top = Math.random() * (window.innerHeight - 50) + "px";
+}
+
+// YES logic
+document.getElementById("yes").onclick = () => {
+    s2.classList.remove("active");
+    s3.classList.add("active");
+
+    const song = document.getElementById("song");
+    song.currentTime = 25;
+    song.play();
+
+    typeFinalText();
+};
+
+// Typing paragraphs (final screen)
+const finalParagraphs = [
+"RAYYY, you walked into my life quietly, but somehow changed everything beautifully.",
+"With you, even ordinary moments feel special and calm feels like home.",
+"I don’t promise perfection, but I promise honesty, laughter, and choosing you every single time.",
+"Thank you for being you — and for making my heart feel this full."
+];
+
+let fp = 0, fc = 0;
+const finalDiv = document.getElementById("finalText");
+
+function typeFinalText() {
+    if (fp < finalParagraphs.length) {
+        if (fc < finalParagraphs[fp].length) {
+            finalDiv.innerHTML += finalParagraphs[fp][fc++];
+            setTimeout(typeFinalText, 35);
+        } else {
+            finalDiv.innerHTML += "<br><br>";
+            fp++; fc = 0;
+            setTimeout(typeFinalText, 600);
+        }
+    }
+}
+
+// Floating sparkles & flowers
+setInterval(() => {
+    const el = document.createElement("div");
+    el.className = "float";
+    el.innerHTML = Math.random() > 0.5 ? "🌸" : "✨";
+    el.style.left = Math.random() * window.innerWidth + "px";
+    el.style.fontSize = (14 + Math.random() * 18) + "px";
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 6000);
+}, 350);
+</script>
+
+</body>
+</html>
