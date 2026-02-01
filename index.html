@@ -15,164 +15,86 @@ body {
     color: #5a2a42;
 }
 
+.screen {
+    display: none;
+    height: 100vh;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.active {
+    display: block;
+}
+
 h1 {
-    margin-top: 15px;
-    font-size: 2.2em;
+    margin-top: 60px;
+    font-size: 2em;
 }
 
-.container {
-    width: 92%;
-    max-width: 380px;
-    margin: auto;
-}
-
-.gallery {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    margin: 10px 0;
-}
-
-.gallery img {
-    width: 95px;
-    height: 130px;
-    object-fit: cover;
-    border-radius: 15px;
-    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-}
-
-#text {
-    min-height: 140px;
-    font-size: 0.95em;
-    margin-top: 15px;
-    line-height: 1.5;
-}
-
-.buttons {
-    margin-top: 20px;
+p {
+    font-size: 1em;
+    line-height: 1.6;
 }
 
 button {
+    margin-top: 25px;
     font-size: 18px;
-    padding: 9px 24px;
+    padding: 10px 28px;
     border-radius: 30px;
     border: none;
 }
 
-#yes {
+#continue, #yes {
     background: #ff5c8d;
     color: white;
 }
 
 #no {
-    background: #e0e0e0;
+    background: #ddd;
     position: absolute;
 }
 
-/* Floating flowers & sparkles */
-.flower, .sparkle {
-    position: absolute;
-    animation: float 6s linear infinite;
+/* Gallery */
+.gallery {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px 0;
+}
+.gallery img {
+    width: 100px;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 15px;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
 }
 
-@keyframes float {
-    from { transform: translateY(100vh); opacity: 1; }
-    to { transform: translateY(-10vh); opacity: 0; }
-}
-
-/* Cute animals */
-.cute {
+/* Plants */
+.plant {
     position: fixed;
     bottom: 5px;
     font-size: 40px;
 }
 .left { left: 5px; }
 .right { right: 5px; }
+
+/* Flowers & sparkles */
+.float {
+    position: absolute;
+    animation: floatUp 6s linear infinite;
+}
+@keyframes floatUp {
+    from { transform: translateY(100vh); opacity: 1; }
+    to { transform: translateY(-10vh); opacity: 0; }
+}
 </style>
 </head>
 
 <body>
 
-<h1>RAYYY 💕</h1>
+<!-- 🌸 SCREEN 1 -->
+<div id="screen1" class="screen active">
+    <h1>HELLO MY SOHNA LADLA PUTT 💖💖</h1>
+    <p>I
 
-<div class="container">
-    <div class="gallery">
-        <img src="img1.jpg">
-        <img src="img2.jpg">
-        <img src="img3.jpg">
-    </div>
-
-    <div id="text"></div>
-
-    <div class="buttons">
-        <button id="yes" onclick="yesClicked()">YES 💖</button>
-        <button id="no">NO 🙈</button>
-    </div>
-</div>
-
-<div class="cute left">🐻🌸</div>
-<div class="cute right">🐼💗</div>
-
-<!-- Song (NO autoplay) -->
-<audio id="song">
-    <source src="song.mp3" type="audio/mpeg">
-</audio>
-
-<script>
-// Typing text
-const paragraphs = [
-"RAYYY, from the moment you walked into my life, everything felt warmer, calmer, and more beautiful.",
-"Every little moment with you feels special — the laughs, the silence, the chaos, and the peace.",
-"So here I am, asking you something simple but true… will you be my Valentine?"
-];
-
-let p = 0, c = 0;
-const textDiv = document.getElementById("text");
-
-function typeText() {
-    if (p < paragraphs.length) {
-        if (c < paragraphs[p].length) {
-            textDiv.innerHTML += paragraphs[p][c++];
-            setTimeout(typeText, 35);
-        } else {
-            textDiv.innerHTML += "<br><br>";
-            p++; c = 0;
-            setTimeout(typeText, 700);
-        }
-    }
-}
-typeText();
-
-// NO button escape
-const noBtn = document.getElementById("no");
-noBtn.addEventListener("touchstart", moveNo);
-noBtn.addEventListener("mouseenter", moveNo);
-
-function moveNo() {
-    noBtn.style.left = Math.random() * (window.innerWidth - 80) + "px";
-    noBtn.style.top = Math.random() * (window.innerHeight - 50) + "px";
-}
-
-// YES button logic
-function yesClicked() {
-    const song = document.getElementById("song");
-    song.currentTime = 25;   // start from 0:25
-    song.play();
-
-    alert("YAYYYY 💗🌸 You just made me the happiest!");
-}
-
-// Flowers & sparkles
-setInterval(() => {
-    const el = document.createElement("div");
-    el.className = Math.random() > 0.5 ? "flower" : "sparkle";
-    el.innerHTML = Math.random() > 0.5 ? "🌸" : "✨";
-    el.style.left = Math.random() * window.innerWidth + "px";
-    el.style.fontSize = (14 + Math.random() * 18) + "px";
-    document.body.appendChild(el);
-    setTimeout(() => el.remove(), 6000);
-}, 300);
-</script>
-
-</body>
-</html>
