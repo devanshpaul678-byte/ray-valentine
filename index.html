@@ -23,25 +23,25 @@ body {
     display: none;
     animation: fadeUp 1s ease forwards;
 }
-
-.active {
-    display: block;
-}
+.active { display: block; }
 
 @keyframes fadeUp {
     from { opacity: 0; transform: translateY(40px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-h1 {
-    margin-top: 60px;
-    font-size: 2em;
+/* Heartbeat */
+.heartbeat {
+    animation: beat 0.6s ease-in-out 2;
+}
+@keyframes beat {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+    100% { transform: scale(1); }
 }
 
-p {
-    font-size: 1em;
-    line-height: 1.6;
-}
+h1 { margin-top: 60px; font-size: 2em; }
+p { font-size: 1em; line-height: 1.6; }
 
 button {
     margin-top: 25px;
@@ -50,15 +50,19 @@ button {
     border-radius: 30px;
     border: none;
 }
+#continue, #yes { background: #ff5c8d; color: white; }
+#no { background: #ddd; position: absolute; }
 
-#continue, #yes {
-    background: #ff5c8d;
-    color: white;
-}
-
-#no {
-    background: #ddd;
+/* Animals */
+.animal {
     position: absolute;
+    font-size: 38px;
+    animation: floatAround 8s ease-in-out infinite;
+}
+@keyframes floatAround {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-35px); }
+    100% { transform: translateY(0); }
 }
 
 /* Gallery */
@@ -76,17 +80,20 @@ button {
     box-shadow: 0 6px 12px rgba(0,0,0,0.15);
 }
 
-/* Floating animals */
-.animal {
+/* Hug bears */
+.hug {
+    font-size: 60px;
     position: absolute;
-    font-size: 38px;
-    animation: floatAround 8s linear infinite;
+    bottom: 80px;
 }
+#bearL { left: 20%; animation: hugL 3s forwards; }
+#bearR { right: 20%; animation: hugR 3s forwards; }
 
-@keyframes floatAround {
-    0% { transform: translateY(0); }
-    50% { transform: translateY(-40px); }
-    100% { transform: translateY(0); }
+@keyframes hugL {
+    to { left: 45%; }
+}
+@keyframes hugR {
+    to { right: 45%; }
 }
 
 /* Plants */
@@ -103,58 +110,70 @@ button {
     position: absolute;
     animation: floatUp 6s linear infinite;
 }
-
 @keyframes floatUp {
     from { transform: translateY(100vh); opacity: 1; }
     to { transform: translateY(-10vh); opacity: 0; }
 }
 
-/* Love burst */
+/* Hearts burst & confetti */
 .heart {
     position: absolute;
     font-size: 22px;
     animation: burst 1.2s ease-out forwards;
 }
-
 @keyframes burst {
-    from { transform: scale(1) translate(0,0); opacity: 1; }
     to {
-        transform: scale(1.8) translate(
-            calc(-100px + 200px * random()),
-            calc(-150px + 300px * random())
-        );
+        transform: translate(
+            calc(-150px + 300px * var(--x)),
+            calc(-200px + 400px * var(--y))
+        ) scale(1.6);
         opacity: 0;
     }
+}
+
+/* Fade to black */
+#ending {
+    position: fixed;
+    inset: 0;
+    background: black;
+    color: white;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8em;
+    animation: fadeIn 3s forwards;
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 </style>
 </head>
 
 <body>
 
-<!-- 🌸 SCREEN 1 -->
+<!-- SCREEN 1 -->
 <div id="screen1" class="screen active">
     <h1>HELLO MY SOHNA LADLA PUTT 💖💖</h1>
     <p>I wanted to say something…<br>ask you something…</p>
     <button id="continue">CONTINUE 💗</button>
 
-    <div class="animal" style="left:10%; top:30%;">🐻</div>
-    <div class="animal" style="right:10%; top:40%;">🐼</div>
+    <div class="animal" style="left:10%; top:35%;">🐻</div>
+    <div class="animal" style="right:10%; top:45%;">🐼</div>
 </div>
 
-<!-- 💕 SCREEN 2 -->
+<!-- SCREEN 2 -->
 <div id="screen2" class="screen">
-    <p>
-        You make my days softer, my smiles real, and my heart calmer than it has ever been.
-    </p>
+    <p>You make my days softer, my smiles real, and my heart calmer than it has ever been.</p>
     <h1>Will you be my VALENTINE? 💘</h1>
     <button id="yes">YES 💖</button>
     <button id="no">NO 🙈</button>
 
-    <div class="animal" style="left:15%; top:35%;">🐼</div>
-    <div class="animal" style="right:15%; top:45%;">🐻</div>
+    <div class="animal" style="left:15%; top:40%;">🐼</div>
+    <div class="animal" style="right:15%; top:50%;">🐻</div>
 </div>
 
-<!-- 🐻💗 SCREEN 3 -->
+<!-- SCREEN 3 -->
 <div id="screen3" class="screen">
     <div class="gallery">
         <img src="img1.jpg">
@@ -162,101 +181,101 @@ button {
         <img src="img3.jpg">
     </div>
     <div id="finalText"></div>
+
+    <div id="bearL" class="hug">🐻</div>
+    <div id="bearR" class="hug">🐻</div>
 </div>
 
-<!-- 🌿 Plants -->
 <div class="plant left">🌿🌱</div>
 <div class="plant right">🌱🌿</div>
+
+<div id="ending">Forever begins here 💗</div>
 
 <audio id="song">
     <source src="song.mp3" type="audio/mpeg">
 </audio>
 
 <script>
-const s1 = document.getElementById("screen1");
-const s2 = document.getElementById("screen2");
-const s3 = document.getElementById("screen3");
+const s1 = screen1, s2 = screen2, s3 = screen3;
 
 // Continue
-document.getElementById("continue").onclick = () => {
+continue.onclick = () => {
     s1.classList.remove("active");
     s2.classList.add("active");
 };
 
 // NO escape
-const noBtn = document.getElementById("no");
-noBtn.addEventListener("mouseenter", moveNo);
-noBtn.addEventListener("touchstart", moveNo);
-
+no.addEventListener("mouseenter", moveNo);
+no.addEventListener("touchstart", moveNo);
 function moveNo() {
-    noBtn.style.left = Math.random() * (window.innerWidth - 80) + "px";
-    noBtn.style.top = Math.random() * (window.innerHeight - 50) + "px";
+    no.style.left = Math.random()*(innerWidth-80)+"px";
+    no.style.top = Math.random()*(innerHeight-50)+"px";
 }
 
-// YES logic
-document.getElementById("yes").onclick = (e) => {
+// YES
+yes.onclick = e => {
+    document.body.classList.add("heartbeat");
     loveBurst(e.target);
 
     setTimeout(() => {
         s2.classList.remove("active");
         s3.classList.add("active");
 
-        const song = document.getElementById("song");
         song.currentTime = 25;
         song.play();
-
-        typeFinalText();
-    }, 900);
+        typeFinal();
+    }, 1200);
 };
 
 // Love burst
-function loveBurst(btn) {
-    const rect = btn.getBoundingClientRect();
-    for (let i = 0; i < 30; i++) {
-        const heart = document.createElement("div");
-        heart.className = "heart";
-        heart.innerHTML = ["💖","💗","💘","💕"][Math.floor(Math.random()*4)];
-        heart.style.left = rect.left + rect.width/2 + "px";
-        heart.style.top = rect.top + "px";
-        document.body.appendChild(heart);
-        setTimeout(() => heart.remove(), 1200);
+function loveBurst(btn){
+    const r = btn.getBoundingClientRect();
+    for(let i=0;i<40;i++){
+        const h=document.createElement("div");
+        h.className="heart";
+        h.innerHTML=["💖","💗","💘","💕"][Math.floor(Math.random()*4)];
+        h.style.left=r.left+r.width/2+"px";
+        h.style.top=r.top+"px";
+        h.style.setProperty("--x",Math.random());
+        h.style.setProperty("--y",Math.random());
+        document.body.appendChild(h);
+        setTimeout(()=>h.remove(),1200);
     }
 }
 
 // Final typing
-const finalParagraphs = [
+const text=[
 "RAYYY, you walked into my life quietly, but somehow changed everything beautifully.",
 "With you, even ordinary moments feel special and calm feels like home.",
 "I don’t promise perfection, but I promise honesty, laughter, and choosing you every single time.",
 "Thank you for being you — and for making my heart feel this full."
 ];
-
-let fp = 0, fc = 0;
-const finalDiv = document.getElementById("finalText");
-
-function typeFinalText() {
-    if (fp < finalParagraphs.length) {
-        if (fc < finalParagraphs[fp].length) {
-            finalDiv.innerHTML += finalParagraphs[fp][fc++];
-            setTimeout(typeFinalText, 35);
-        } else {
-            finalDiv.innerHTML += "<br><br>";
-            fp++; fc = 0;
-            setTimeout(typeFinalText, 600);
+let i=0,j=0;
+function typeFinal(){
+    if(i<text.length){
+        if(j<text[i].length){
+            finalText.innerHTML+=text[i][j++];
+            setTimeout(typeFinal,35);
+        }else{
+            finalText.innerHTML+="<br><br>";
+            i++; j=0;
+            setTimeout(typeFinal,600);
         }
+    }else{
+        setTimeout(()=>ending.style.display="flex",2000);
     }
 }
 
 // Floating flowers
-setInterval(() => {
-    const el = document.createElement("div");
-    el.className = "float";
-    el.innerHTML = Math.random() > 0.5 ? "🌸" : "✨";
-    el.style.left = Math.random() * window.innerWidth + "px";
-    el.style.fontSize = (14 + Math.random() * 18) + "px";
-    document.body.appendChild(el);
-    setTimeout(() => el.remove(), 6000);
-}, 350);
+setInterval(()=>{
+    const f=document.createElement("div");
+    f.className="float";
+    f.innerHTML=Math.random()>0.5?"🌸":"✨";
+    f.style.left=Math.random()*innerWidth+"px";
+    f.style.fontSize=14+Math.random()*18+"px";
+    document.body.appendChild(f);
+    setTimeout(()=>f.remove(),6000);
+},350);
 </script>
 
 </body>
